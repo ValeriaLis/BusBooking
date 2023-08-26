@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="nav">
+    <% if user_signed_in? %>
+      <%= link_to "Logout", destroy_user_session_path, method: :delete , class: 'btn btn-passive'%>
+      <%= link_to "My Tickets", bookings_path, class: 'btn btn-passive' %>
+      <br><br>
+      <strong class="icon-user">User: <%=current_user.email[0,current_user.email.index('@')] %> - <%= current_user.email %></strong>
+    <% else %>
+      <%= link_to "Log In", new_user_session_path, class: 'btn btn-passive'%>
+      <%= link_to "Sign up", new_user_registration_path, class: "btn btn-action" %>
+    <% end %>
+  </div>
+  <h1>BusBookings</h1>
+  <%= form_tag(tickets_path, method: "get") do %>
+    <%= label_tag "departure", "Departure Date" %>
+    <%= date_field_tag "departure" %>
+
+    <%= label_tag "from", "From Location" %>
+    <%= text_field_tag "from" %>
+
+    <%= label_tag "to", "To Location" %>
+    <%= text_field_tag "to" %>
+
+    <%= submit_tag "Search" %>
+  <% end %>
+  <table class="layout display responsive-table">
+    <thead>
+    <tr>
+      <th class="table upper left">Company</th>
+      <th>Departure</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Available tickets</th>
+      <th colspan="3"></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @tickets.each do |ticket| %>
+      <% if (ticket.departure-1.hours)>DateTime.now%>
+        <tr>
+          <td><%= ticket.company %></td>
+          <td><%= ticket.departure.to_formatted_s(:long)%></td>
+          <td><%= ticket.from %></td>
+          <td><%= ticket.to %></td>
+          <% num_available =  ticket.num_max - @bookings.where(ticket_id: ticket.id).length %>
+          <td><%= num_available  %></td>
+          <% if num_available > 0 %>
+            <td><%= link_to 'Buy', new_ticket_booking_path(ticket), class: "btn btn-buy" %></td>
+            <td></td><td></td><td></td>
+            <td><%= link_to "Edit", edit_ticket_path(ticket) %></td>
+          <% else  %>
+            <td>No more available tickets</td>
+          <% end %>
+        </tr>
+      <%end%>
+    <% end %>
+    </tbody>
+  </table>
+</div>

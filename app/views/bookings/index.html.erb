@@ -1,0 +1,32 @@
+<h2><%="#{current_user.email[0,current_user.email.index('@')]}'s bookings"  %></h2>
+
+<table>
+  <thead>
+  <tr>
+    <th>Company</th>
+    <th>From</th>
+    <th>To</th>
+    <th>Departure</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @bookings_detail.each do |booking| %>
+    <% if (booking.ticket.departure-1.hours) > DateTime.now %>
+      <tr>
+        <td><%= booking.ticket.company %></td>
+        <td><%= booking.ticket.from %></td>
+        <td><%= booking.ticket.to %></td>
+        <td><%= booking.ticket.departure.to_formatted_s(:long)    %></td>
+        <% if ((booking.ticket.departure-2.hours)-DateTime.now)<=0 %>
+          <td> Too late to cancel </td>
+        <% else %>
+          <td><%= button_to 'Cancel', booking, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-cancel"%></td>
+        <% end %>
+      </tr>
+    <% end %>
+  <% end %>
+  </tbody>
+</table>
+

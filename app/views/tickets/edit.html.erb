@@ -1,0 +1,23 @@
+<h1>Editing Ticket</h1>
+
+<%= form_for @ticket do |f| %>
+  <%= f.label :company %>
+  <%= f.text_field :company %>
+
+  <%= f.label :departure %>
+  <%= f.datetime_field :departure %>
+
+  <%= f.label :from%>
+  <%= f.text_field :from%>
+
+  <%= f.label :to%>
+  <%= f.text_field :to%>
+
+  <%= f.label :num_max %>
+  <%= f.number_field :num_max %>
+
+  <%= f.submit "Update Ticket" %>
+<% end %>
+
+<%= link_to 'Show', @ticket %> |
+<%= link_to 'Back', tickets_path %>
